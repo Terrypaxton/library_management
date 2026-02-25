@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lumina Library System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!-- Ionicons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo">
+                <ion-icon name="library"></ion-icon>
+                <h2>Lumina Library</h2>
+            </div>
+            <nav class="menu">
+                <a href="#" class="menu-item active" data-target="dashboard">
+                    <ion-icon name="grid-outline"></ion-icon> <span>Dashboard</span>
+                </a>
+                <a href="#" class="menu-item" data-target="add-book">
+                    <ion-icon name="add-circle-outline"></ion-icon> <span>Add Book</span>
+                </a>
+                <a href="#" class="menu-item" data-target="show-books">
+                    <ion-icon name="book-outline"></ion-icon> <span>Show Books</span>
+                </a>
+                <a href="#" class="menu-item" data-target="issue-book">
+                    <ion-icon name="arrow-undo-outline"></ion-icon> <span>Issue Book</span>
+                </a>
+                <a href="#" class="menu-item" data-target="return-book">
+                    <ion-icon name="arrow-redo-outline"></ion-icon> <span>Return Book</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="avatar">Admin</div>
+                    <span>System Admin</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Workspace -->
+        <main class="main-content">
+            <header class="topbar">
+                <div class="search-bar">
+                    <ion-icon name="search-outline"></ion-icon>
+                    <input type="text" placeholder="Search across the library...">
+                </div>
+                <div class="topbar-actions">
+                    <button class="icon-btn"><ion-icon name="notifications-outline"></ion-icon></button>
+                    <button class="icon-btn"><ion-icon name="settings-outline"></ion-icon></button>
+                </div>
+            </header>
+
+            <div class="content-area">
+                
+                <!-- View: Dashboard -->
+                <section id="dashboard" class="view-section active">
+                    <div class="header-title">
+                        <h1>Overview Dashboard</h1>
+                        <p>Welcome back, here is what's happening today.</p>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon-wrapper primary"><ion-icon name="library"></ion-icon></div>
+                            <div class="stat-info">
+                                <h3>Total Books</h3>
+                                <p id="stat-total">0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon-wrapper warning"><ion-icon name="bookmark"></ion-icon></div>
+                            <div class="stat-info">
+                                <h3>Issued</h3>
+                                <p id="stat-issued">0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon-wrapper success"><ion-icon name="checkmark-circle"></ion-icon></div>
+                            <div class="stat-info">
+                                <h3>Available</h3>
+                                <p id="stat-available">0</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card recent-activity">
+                        <div class="card-header">
+                            <h2>Recently Added Books</h2>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Title</th>
+                                        <th>Author</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recent-books-list">
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- View: Add Book -->
+                <section id="add-book" class="view-section">
+                    <div class="header-title">
+                        <h1>Add New Book</h1>
+                        <p>Enter the details of the new book to register it in the system.</p>
+                    </div>
+                    <div class="card form-card">
+                        <form id="addBookForm">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Book ID</label>
+                                    <input type="number" id="bookId" required placeholder="Enter unique ID">
+                                </div>
+                                <div class="form-group">
+                                    <label>Title</label>
+                                    <input type="text" id="bookTitle" required placeholder="Book title">
+                                </div>
+                                <div class="form-group">
+                                    <label>Author</label>
+                                    <input type="text" id="bookAuthor" required placeholder="Author name">
+                                </div>
+                                <div class="form-group">
+                                    <label>Price</label>
+                                    <input type="number" id="bookPrice" required placeholder="ex. 500">
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">
+                                    <ion-icon name="save-outline"></ion-icon> Save Book To Catalog
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+
+                <!-- View: Show Books -->
+                <section id="show-books" class="view-section">
+                    <div class="header-title">
+                        <h1>Library Catalog</h1>
+                        <p>Complete list of all books available and issued.</p>
+                    </div>
+                    <div class="card full-height">
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Title</th>
+                                        <th>Author</th>
+                                        <th>Price</th>
+                                        <th>Status</th>
+                                        <th>Issued To</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="all-books-list">
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- View: Issue Book -->
+                <section id="issue-book" class="view-section">
+                    <div class="header-title">
+                        <h1>Issue Book</h1>
+                        <p>Assign a book to a library member.</p>
+                    </div>
+                    <div class="card form-card">
+                        <form id="issueBookForm">
+                            <div class="form-group">
+                                <label>Book ID</label>
+                                <input type="number" id="issueBookId" required placeholder="Enter ID of book to issue">
+                            </div>
+                            <div class="form-group">
+                                <label>Member Name</label>
+                                <input type="text" id="issueMemberName" required placeholder="Name of the person borrowing">
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-warning">
+                                    <ion-icon name="arrow-undo-outline"></ion-icon> Issue Book
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+
+                <!-- View: Return Book -->
+                <section id="return-book" class="view-section">
+                    <div class="header-title">
+                        <h1>Return Book</h1>
+                        <p>Process a returning book and make it available again.</p>
+                    </div>
+                    <div class="card form-card">
+                        <form id="returnBookForm">
+                            <div class="form-group">
+                                <label>Book ID</label>
+                                <input type="number" id="returnBookId" required placeholder="Enter ID of returning book">
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-success">
+                                    <ion-icon name="arrow-redo-outline"></ion-icon> Process Return
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Global Toast Notification -->
+    <div id="toast" class="toast">Action completed successfully</div>
+
+    <script src="script.js"></script>
+</body>
+</html>
