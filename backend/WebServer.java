@@ -17,7 +17,7 @@ public class WebServer {
         library.addBook(new book(101, "Effective Java", false, null, 45, "Joshua Bloch"));
         library.addBook(new book(102, "Clean Code", true, "Alice", 40, "Robert C. Martin"));
 
-        HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
+        HttpServer server = HttpServer.create(new InetSocketAddress(8081), 0);
 
         // Setup API routes
         server.createContext("/api/books", new BooksHandler());

@@ -1,22 +1,131 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lumina Library System</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Cosmic Pages — Library System</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cinzel+Decorative:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <!-- Ionicons -->
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </head>
+
 <body>
+    <!-- Roaming Words Background -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Settings Overlay + Panel -->
+    <div class="settings-overlay" id="settingsOverlay"></div>
+    <aside class="settings-panel" id="settingsPanel">
+        <div class="settings-header">
+            <h2>⚙ Preferences</h2>
+            <button class="close-btn" id="closeSettings"><ion-icon name="close-outline"></ion-icon></button>
+        </div>
+        <div class="settings-body">
+
+            <!-- Appearance -->
+            <div class="settings-group">
+                <h3>Appearance</h3>
+                <div class="settings-item">
+                    <div class="settings-label">
+                        <span>Theme</span>
+                        <span>Light or Dark mode</span>
+                    </div>
+                    <select class="settings-select" id="setTheme">
+                        <option value="dark" selected>Dark</option>
+                        <option value="light">Light</option>
+                    </select>
+                </div>
+                <div class="settings-item">
+                    <div class="settings-label">
+                        <span>Accent Colour</span>
+                        <span>Global highlight colour</span>
+                    </div>
+                    <select class="settings-select" id="setAccent">
+                        <option value="#8b5cf6">Violet</option>
+                        <option value="#06b6d4">Cyan</option>
+                        <option value="#f59e0b">Amber</option>
+                        <option value="#ec4899">Rose</option>
+                        <option value="#10b981">Emerald</option>
+                    </select>
+                </div>
+                <div class="settings-item">
+                    <div class="settings-label">
+                        <span>Compact Sidebar</span>
+                        <span>Collapse to icon-only</span>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" id="setSidebarCompact">
+                        <div class="toggle-track"></div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Background Words -->
+            <div class="settings-group">
+                <h3>Background Words</h3>
+                <div class="settings-item">
+                    <div class="settings-label">
+                        <span>Word Density</span>
+                        <span>Number of floating words</span>
+                    </div>
+                    <select class="settings-select" id="setDensity">
+                        <option value="low">Low</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+                <div class="settings-item">
+                    <div class="settings-label">
+                        <span>Word Speed</span>
+                        <span>Drift velocity (0.5 – 2×)</span>
+                    </div>
+                    <input type="range" id="setWordSpeed" min="0.5" max="2" step="0.1" value="1"
+                        style="width:90px;accent-color:var(--accent);cursor:pointer;">
+                </div>
+            </div>
+
+            <!-- Accessibility -->
+            <div class="settings-group">
+                <h3>Accessibility</h3>
+                <div class="settings-item">
+                    <div class="settings-label">
+                        <span>Reduce Motion</span>
+                        <span>Minimise animations</span>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" id="setReduceMotion">
+                        <div class="toggle-track"></div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- About -->
+            <div class="settings-group">
+                <h3>About</h3>
+                <div class="settings-item">
+                    <div class="settings-label">
+                        <span>Lumina Library</span>
+                        <span>Version 2.0 — Dark Aesthetic</span>
+                    </div>
+                </div>
+                <div class="font-preview">Typography: Cormorant Garamond · Inter · Space Grotesk</div>
+            </div>
+
+        </div>
+    </aside>
+
     <div class="app-container">
+
         <!-- Sidebar Navigation -->
         <aside class="sidebar">
             <div class="logo">
-                <ion-icon name="library"></ion-icon>
-                <h2>Lumina Library</h2>
+                <ion-icon name="planet-outline"></ion-icon>
+                <h2>Cosmic Pages</h2>
             </div>
             <nav class="menu">
                 <a href="#" class="menu-item active" data-target="dashboard">
@@ -34,11 +143,32 @@
                 <a href="#" class="menu-item" data-target="return-book">
                     <ion-icon name="arrow-redo-outline"></ion-icon> <span>Return Book</span>
                 </a>
+                <a href="#" class="menu-item" data-target="admin-panel">
+                    <ion-icon name="shield-checkmark-outline"></ion-icon> <span>Admin Panel</span>
+                </a>
             </nav>
             <div class="sidebar-footer">
-                <div class="user-info">
-                    <div class="avatar">Admin</div>
+                <!-- Admin quick-access popover -->
+                <div class="admin-popover" id="adminPopover">
+                    <div class="admin-popover-item" id="popGoAdmin">
+                        <ion-icon name="shield-checkmark-outline"></ion-icon> Admin Panel
+                    </div>
+                    <div class="admin-popover-item" id="popExportCsv">
+                        <ion-icon name="download-outline"></ion-icon> Export CSV
+                    </div>
+                    <div class="admin-popover-item" id="popPrint">
+                        <ion-icon name="print-outline"></ion-icon> Print Report
+                    </div>
+                    <div class="admin-popover-divider"></div>
+                    <div class="admin-popover-item danger" id="popSignOut">
+                        <ion-icon name="log-out-outline"></ion-icon> Sign Out
+                    </div>
+                </div>
+                <div class="user-info" id="adminAvatarBtn" title="Admin options">
+                    <div class="avatar">A</div>
                     <span>System Admin</span>
+                    <ion-icon name="chevron-up-outline"
+                        style="margin-left:auto;font-size:14px;color:var(--text-muted);"></ion-icon>
                 </div>
             </div>
         </aside>
@@ -51,20 +181,20 @@
                     <input type="text" placeholder="Search across the library...">
                 </div>
                 <div class="topbar-actions">
-                    <button class="icon-btn"><ion-icon name="notifications-outline"></ion-icon></button>
-                    <button class="icon-btn"><ion-icon name="settings-outline"></ion-icon></button>
+                    <button class="icon-btn" id="settingsBtn" title="Settings">
+                        <ion-icon name="settings-outline"></ion-icon>
+                    </button>
                 </div>
             </header>
 
             <div class="content-area">
-                
+
                 <!-- View: Dashboard -->
                 <section id="dashboard" class="view-section active">
                     <div class="header-title">
-                        <h1>Overview Dashboard</h1>
-                        <p>Welcome back, here is what's happening today.</p>
+                        <h1 class="cinzel-title">Overview Dashboard</h1>
+                        <p>Welcome back — here is what's happening today.</p>
                     </div>
-
                     <div class="stats-grid">
                         <div class="stat-card">
                             <div class="stat-icon-wrapper primary"><ion-icon name="library"></ion-icon></div>
@@ -88,7 +218,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="card recent-activity">
                         <div class="card-header">
                             <h2>Recently Added Books</h2>
@@ -103,9 +232,7 @@
                                         <th>Status</th>
                                     </tr>
                                 </thead>
-                                <tbody id="recent-books-list">
-                                    <!-- Populated by JS -->
-                                </tbody>
+                                <tbody id="recent-books-list"></tbody>
                             </table>
                         </div>
                     </div>
@@ -115,7 +242,7 @@
                 <section id="add-book" class="view-section">
                     <div class="header-title">
                         <h1>Add New Book</h1>
-                        <p>Enter the details of the new book to register it in the system.</p>
+                        <p>Register a new title into the library catalog.</p>
                     </div>
                     <div class="card form-card">
                         <form id="addBookForm">
@@ -133,13 +260,13 @@
                                     <input type="text" id="bookAuthor" required placeholder="Author name">
                                 </div>
                                 <div class="form-group">
-                                    <label>Price</label>
-                                    <input type="number" id="bookPrice" required placeholder="ex. 500">
+                                    <label>Price (₹)</label>
+                                    <input type="number" id="bookPrice" required placeholder="e.g. 500">
                                 </div>
                             </div>
                             <div class="form-actions">
                                 <button type="submit" class="btn btn-primary">
-                                    <ion-icon name="save-outline"></ion-icon> Save Book To Catalog
+                                    <ion-icon name="save-outline"></ion-icon> Save to Catalog
                                 </button>
                             </div>
                         </form>
@@ -150,9 +277,9 @@
                 <section id="show-books" class="view-section">
                     <div class="header-title">
                         <h1>Library Catalog</h1>
-                        <p>Complete list of all books available and issued.</p>
+                        <p>Complete list of all books — available and issued.</p>
                     </div>
-                    <div class="card full-height">
+                    <div class="card">
                         <div class="table-responsive">
                             <table class="data-table">
                                 <thead>
@@ -165,9 +292,7 @@
                                         <th>Issued To</th>
                                     </tr>
                                 </thead>
-                                <tbody id="all-books-list">
-                                    <!-- Populated by JS -->
-                                </tbody>
+                                <tbody id="all-books-list"></tbody>
                             </table>
                         </div>
                     </div>
@@ -185,11 +310,11 @@
                                 <label>Book ID</label>
                                 <input type="number" id="issueBookId" required placeholder="Enter ID of book to issue">
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" style="margin-top:18px;">
                                 <label>Member Name</label>
-                                <input type="text" id="issueMemberName" required placeholder="Name of the person borrowing">
+                                <input type="text" id="issueMemberName" required placeholder="Name of the borrower">
                             </div>
-                            <div class="form-actions">
+                            <div class="form-actions" style="margin-top:24px;">
                                 <button type="submit" class="btn btn-warning">
                                     <ion-icon name="arrow-undo-outline"></ion-icon> Issue Book
                                 </button>
@@ -198,19 +323,127 @@
                     </div>
                 </section>
 
+                <!-- View: Admin Panel -->
+                <section id="admin-panel" class="view-section">
+                    <div class="header-title">
+                        <h1>Admin Panel</h1>
+                        <p>Manage the library — members, search, tools &amp; reports.</p>
+                    </div>
+
+                    <!-- Search Bar -->
+                    <div class="admin-search-wrap">
+                        <div class="search-bar admin-search">
+                            <ion-icon name="search-outline"></ion-icon>
+                            <input type="text" id="adminSearch" placeholder="Search by title, author or ID…">
+                        </div>
+                        <div class="admin-filter-btns">
+                            <button class="filter-btn active" data-filter="all">All</button>
+                            <button class="filter-btn" data-filter="available">Available</button>
+                            <button class="filter-btn" data-filter="issued">Issued</button>
+                        </div>
+                    </div>
+
+                    <!-- Search Results -->
+                    <div class="card" style="margin-bottom:28px;">
+                        <div class="card-header">
+                            <h2>Catalog Search Results</h2>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Title</th>
+                                        <th>Author</th>
+                                        <th>Price</th>
+                                        <th>Status</th>
+                                        <th>Held By</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-search-results"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Active Members -->
+                    <div class="admin-grid">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2>📚 Active Members</h2>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Member Name</th>
+                                            <th>Book ID</th>
+                                            <th>Title</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="admin-members-list"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Quick Actions -->
+                        <div class="card form-card">
+                            <div class="card-header">
+                                <h2>⚡ Quick Actions</h2>
+                            </div>
+                            <div style="padding:20px;display:flex;flex-direction:column;gap:14px;">
+                                <button class="btn btn-primary" id="adminRefreshBtn"
+                                    style="width:100%;justify-content:center;">
+                                    <ion-icon name="refresh-outline"></ion-icon> Refresh All Data
+                                </button>
+                                <button class="btn btn-warning" id="adminPrintBtn"
+                                    style="width:100%;justify-content:center;">
+                                    <ion-icon name="print-outline"></ion-icon> Print Catalog Report
+                                </button>
+                                <button class="btn btn-success" id="adminExportBtn"
+                                    style="width:100%;justify-content:center;">
+                                    <ion-icon name="download-outline"></ion-icon> Export as CSV
+                                </button>
+                                <div style="margin-top:8px;padding-top:16px;border-top:1px solid var(--border);">
+                                    <p
+                                        style="font-family:'Cormorant Garamond',serif;font-size:13px;font-style:italic;color:var(--text-muted);margin-bottom:10px;">
+                                        Delete a book by ID</p>
+                                    <div style="display:flex;gap:10px;">
+                                        <input type="number" id="deleteBookId" placeholder="Book ID"
+                                            style="flex:1;background:rgba(255,255,255,0.025);border:1px solid var(--border);border-radius:var(--radius-sm);padding:11px 14px;color:var(--text-primary);font-size:14px;outline:none;">
+                                        <button class="btn btn-danger" id="adminDeleteBtn">
+                                            <ion-icon name="trash-outline"></ion-icon> Delete
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Library Report Summary -->
+                    <div class="card" style="margin-top:28px;">
+                        <div class="card-header">
+                            <h2>📊 Library Report</h2>
+                        </div>
+                        <div id="admin-report"
+                            style="padding:24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;">
+                        </div>
+                    </div>
+                </section>
+
                 <!-- View: Return Book -->
                 <section id="return-book" class="view-section">
                     <div class="header-title">
                         <h1>Return Book</h1>
-                        <p>Process a returning book and make it available again.</p>
+                        <p>Process a returned book and restore its availability.</p>
                     </div>
                     <div class="card form-card">
                         <form id="returnBookForm">
                             <div class="form-group">
                                 <label>Book ID</label>
-                                <input type="number" id="returnBookId" required placeholder="Enter ID of returning book">
+                                <input type="number" id="returnBookId" required
+                                    placeholder="Enter ID of returning book">
                             </div>
-                            <div class="form-actions">
+                            <div class="form-actions" style="margin-top:24px;">
                                 <button type="submit" class="btn btn-success">
                                     <ion-icon name="arrow-redo-outline"></ion-icon> Process Return
                                 </button>
@@ -223,9 +456,10 @@
         </main>
     </div>
 
-    <!-- Global Toast Notification -->
-    <div id="toast" class="toast">Action completed successfully</div>
+    <!-- Global Toast -->
+    <div id="toast" class="toast"></div>
 
     <script src="script.js"></script>
 </body>
+
 </html>
